@@ -1,0 +1,15 @@
+apiVersion: v2
+description: An Python HTTP server
+keywords:
+- http
+- nginx
+- www
+- web
+kubeVersion: '>=1.10.0'
+maintainers:
+- email: me@
+  name: Atadzhan
+name: nginx
+sources:
+- https://hub.docker.com/r/kurbik/web-app
+version: latest
