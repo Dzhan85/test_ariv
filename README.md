@@ -63,8 +63,11 @@ helm template nginx.tgz | kubectl create --namespace backend -f -
 
 ### Deploy with ansible 
 
+```Dockerfile
 
+ansible-playbook main.yml
 
+```
 ### Deploy with terraform
 
 
