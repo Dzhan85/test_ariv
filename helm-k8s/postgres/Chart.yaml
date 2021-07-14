@@ -7,7 +7,7 @@ appVersion: 1.16.0
 keywords:
   - database
   - postgres
-home: https://github.com/wkrzywiec/k8s-helm-helmfile/tree/master/helm
+home: https://github.com/
 maintainers:
-  - name: Wojtek Krzywiec
-    url: https://github.com/wkrzywiec
+  - name: 
+    url: https://github.com/

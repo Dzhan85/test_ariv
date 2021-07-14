@@ -2,7 +2,7 @@ app:
   name: kanban-app
   group: backend
   container:
-    image: wkrzywiec/kanban-app:k8s
+    image: 
     config:
       - name: postgres-config
     env: 

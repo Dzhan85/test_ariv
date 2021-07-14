@@ -5,14 +5,14 @@ ingress:
         - path: /
           backend:  
             serviceName: adminer
-            servicePort: 8080
+            servicePort: 8081
     - host: kanban.k8s.com
       paths: 
         - path: /api/
           backend:
             serviceName: kanban-app
-            servicePort: 8080
+            servicePort: 8081
         - path: /
           backend:
             serviceName: kanban-ui
-            servicePort: 80
+            servicePort: 8080
