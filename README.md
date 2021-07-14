@@ -4,12 +4,21 @@ task
 
 ## How to use
 
-* You shouldn't have to clone the GitHub repo. You should use it as a base image for other images, using this in your `Dockerfile`:
+### 
+* Clone your repository
+
+### Build docker image and push to docker repository
+* Go to directory `docker-image` and build docker images with using this in your `Dockerfile` and push it:
 
 ```Dockerfile
-FROM tiangolo/uwsgi-nginx:python3.8
+
 
 # Your Dockerfile code...
+
+  docker build -t kurbik/web-app .
+  
+  docker image push kurbik/web-app 
+  
 ```
 
 * But, if you need Python 2.7 that line would have to be `FROM tiangolo/uwsgi-nginx:python2.7`.
