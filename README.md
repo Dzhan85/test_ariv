@@ -18,18 +18,16 @@ FROM tiangolo/uwsgi-nginx:python3.8
 
 * That `uwsgi.ini` file will make it try to run a Python file in `/app/main.py`.
 
-If you are building a **Flask** web application you should use instead [**tiangolo/uwsgi-nginx-flask**](https://hub.docker.com/r/tiangolo/uwsgi-nginx-flask/).
 
 ## Advanced usage
 
-### Custom app directory
+###  app directory
 
 If you need to use a directory for your app different than `/app`, you can override the uWSGI config file path with an environment variable `UWSGI_INI`, and put your custom `uwsgi.ini` file there.
 
 For example, if you needed to have your application directory in `/application` instead of `/app`, your `Dockerfile` would look like:
 
 ```Dockerfile
-FROM tiangolo/uwsgi-nginx:python3.8
 
 ENV UWSGI_INI /application/uwsgi.ini
 
@@ -44,11 +42,10 @@ And your `uwsgi.ini` file in `./application/uwsgi.ini` would contain:
 wsgi-file=/application/main.py
 ```
 
-**Note**: it's important to include the `WORKDIR` option, otherwise uWSGI will start the application in `/app`.
 
 ### Custom uWSGI process number
 
-By default, the image starts with 2 uWSGI processes running. When the server is experiencing a high load, it creates up to 16 uWSGI processes to handle it on demand.
+the image starts with 2 uWSGI processes running. When the server is experiencing a high load, it creates up to 16 uWSGI processes to handle it on demand.
 
 If you need to configure these numbers you can use environment variables.
 
@@ -56,12 +53,10 @@ The starting number of uWSGI processes is controlled by the variable `UWSGI_CHEA
 
 The maximum number of uWSGI processes is controlled by the variable `UWSGI_PROCESSES`, by default set to `16`.
 
-Have in mind that `UWSGI_CHEAPER` must be lower than `UWSGI_PROCESSES`.
+ `UWSGI_CHEAPER` must be lower than `UWSGI_PROCESSES`.
 
-So, if, for example, you need to start with 4 processes and grow to a maximum of 64, your `Dockerfile` could look like:
 
 ```Dockerfile
-FROM tiangolo/uwsgi-nginx:python3.8
 
 ENV UWSGI_CHEAPER 4
 ENV UWSGI_PROCESSES 64
@@ -98,7 +93,6 @@ You might also need to create the respective `EXPOSE` Docker instruction.
 You can do that in your `Dockerfile`, it would look something like:
 
 ```Dockerfile
-FROM tiangolo/uwsgi-nginx:python3.8
 
 ENV LISTEN_PORT 8080
 
