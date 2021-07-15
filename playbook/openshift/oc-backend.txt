@@ -1,0 +1,1 @@
+oc process -n backend -f backend-template.yaml --param-file=backend.conf  --ignore-unknown-parameters=true | oc apply -n backend -f -;

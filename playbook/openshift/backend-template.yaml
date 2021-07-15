@@ -1,0 +1,97 @@
+apiVersion: v1
+kind: Template
+metadata:
+  name: backend-${STAND_ID}
+objects:
+- apiVersion: apps.openshift.io/v1
+  kind: DeploymentConfig
+  metadata:
+    labels:
+      app: backend
+      version: '7.0.0'
+      distribVersion: '7.0.0'
+    name: backend-${STAND_ID}
+  spec:
+    replicas: ${{backend_replica_count}}
+    selector:
+      app: backend
+      deploymentconfig: backend-${STAND_ID}
+    strategy:
+      activeDeadlineSeconds: ${{backend_strategy_activeDeadlineSeconds}}
+      resources: {}
+      rollingParams:
+        intervalSeconds: ${{backend_strategy_rollingParams_intervalSeconds}}
+        maxSurge: ${backend_strategy_rollingParams_maxSurge}
+        maxUnavailable: ${backend_strategy_rollingParams_maxUnavailable}
+        timeoutSeconds: ${{backend_strategy_rollingParams_timeoutSeconds}}
+        updatePeriodSeconds: ${{backend_strategy_rollingParams_updatePeriodSeconds}}
+      type: Rolling
+    template:
+      metadata:
+        labels:
+          app: backend
+          version: '7.0.0'
+          distribVersion: '7.0.0'
+          deploymentconfig: backend-${STAND_ID}
+        annotations:
+          sidecar.istio.io/proxyCPU: ${backend_istioProxy_resources_requests_cpu}
+          sidecar.istio.io/proxyMemory: ${backend_istioProxy_resources_requests_memory}
+          sidecar.maistra.io/proxyCPULimit: ${backend_istioProxy_resources_limits_cpu}
+          sidecar.maistra.io/proxyMemoryLimit: ${backend_istioProxy_resources_limits_memory}
+      spec:
+        containers:
+        - env:
+          - name: TZ
+            value: Europe/Vladivostok
+          image: ${DOCKER_REGISTRY}/backend:7.0.0
+          name: backend
+          ports:
+          - containerPort: 8080
+            protocol: TCP
+          resources:
+            limits:
+              cpu: ${backend_resources_limits_cpu}
+              memory: ${backend_resources_limits_memory}
+            requests:
+              cpu: ${backend_resources_requests_cpu}
+              memory: ${backend_resources_requests_memory}
+    triggers:
+    - type: ConfigChange
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+          - backend
+        from:
+          kind: ImageStreamTag
+          name: backend:7.0.0
+      type: ImageChange
+
+- kind: Service
+  apiVersion: v1
+  metadata:
+    name: backend-${STAND_ID}
+    labels:
+      app: backend
+  spec:
+    ports:
+      - name: port-1
+        protocol: TCP
+        port: 8080
+        targetPort: 8080
+    selector:
+      app: backend
+      deploymentconfig: backend-${STAND_ID}
+
+- kind: ImageStream
+  apiVersion: image.openshift.io/v1
+  metadata:
+    name: backend
+  spec:
+    lookupPolicy:
+      local: false
+    tags:
+      - annotations: null
+        name: '7.0.0'
+        from:
+          kind: DockerImage
+          name: ${DOCKER_REGISTRY}/backend:7.0.0
