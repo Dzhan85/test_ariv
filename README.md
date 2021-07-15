@@ -36,6 +36,7 @@ task
 
 oc login
 az login
+gcloud login
 
 
 ```
