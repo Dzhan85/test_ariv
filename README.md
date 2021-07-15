@@ -69,6 +69,17 @@ helm template nginx.tgz | kubectl create --namespace backend -f -
 ansible-playbook main.yml
 
 ```
+
+### Deploy with cli in Openshift
+
+1. login to Openshift
+2. Enter to directory `openshift`
+3. Execute command from command line
+
+```
+oc process -n backend -f backend-template.yaml --param-file=backend.conf  --ignore-unknown-parameters=true | oc apply -n backend -f -;
+
+```
 ### Deploy with terraform
 
 
