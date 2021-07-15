@@ -46,7 +46,7 @@ objects:
           image: ${DOCKER_REGISTRY}/backend:7.0.0
           name: backend
           ports:
-          - containerPort: 8080
+          - containerPort: 80
             protocol: TCP
           resources:
             limits:
@@ -74,11 +74,14 @@ objects:
       app: backend
   spec:
     ports:
-      - name: port-1
+      - name: my-http-port
         protocol: TCP
-        port: 8080
-        targetPort: 8080
-    selector:
+        port: 80
+        targetPort: 80
+      - name: my-https-port
+        port: 443
+        targetPort: 443
+        selector:
       app: backend
       deploymentconfig: backend-${STAND_ID}
 
@@ -95,3 +98,27 @@ objects:
         from:
           kind: DockerImage
           name: ${DOCKER_REGISTRY}/backend:7.0.0
+
+- kind: Ingress
+  apiVersion: image.openshift.io/v1
+  metadata:
+      name: backend-ingress
+      #annotations:
+        # kubernetes.io/ingress.class: "nginx"
+        # nginx.ingress.kubernetes.io/affinity: "cookie"
+        # nginx.ingress.kubernetes.io/session-cookie-expires: "172800"
+        # nginx.ingress.kubernetes.io/session-cookie-max-age: "172800"
+        # nginx.ingress.kubernetes.io/ssl-redirect: "false"
+        # nginx.ingress.kubernetes.io/affinity-mode: persistent
+        # nginx.ingress.kubernetes.io/session-cookie-hash: sha1
+        # nginx.ingress.kubernetes.io/secure-backends: "true"
+        # nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
+        # ingress.kubernetes.io/backend-protocol: "HTTPS"
+        # kubernetes.io/tls-acme: "true"
+  spec:
+      rules:
+      - http:
+          - path: /
+            backend:
+              serviceName: backend-${STAND_ID}
+              servicePort: 80
